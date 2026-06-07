@@ -228,10 +228,14 @@ exportBtn.addEventListener('click', () => {
     }
 });
 
-copyBtn.addEventListener('click', () => {
-    blueprintOutput.select();
-    document.execCommand('copy');
-    showStatus('Copied to clipboard! ✓', 'success');
+copyBtn.addEventListener('click', async () => {
+    try {
+        await navigator.clipboard.writeText(blueprintOutput.value);
+        showStatus('Copied to clipboard! ✓', 'success');
+    } catch (error) {
+        showStatus('Copy failed: ' + error.message, 'error');
+        console.error(error);
+    }
 });
 
 function showStatus(message, type) {
