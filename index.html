@@ -164,6 +164,20 @@
             display: none;
         }
 
+        .checkbox-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .checkbox-row input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #667eea;
+        }
+
         input[type="range"] {
             width: 100%;
             height: 6px;
@@ -422,6 +436,14 @@
                     </select>
                     <input class="config-input" type="text" id="customTileName" placeholder="Enter custom tile name" hidden>
                     <div style="font-size: 11px; color: #999; margin-top: 4px;">Custom names are passed through as-is for modded tiles.</div>
+                </div>
+
+                <div class="slider-group">
+                    <label class="checkbox-row" for="addWallToggle">
+                        <input type="checkbox" id="addWallToggle">
+                        <span>Add wall</span>
+                    </label>
+                    <div style="font-size: 11px; color: #999; margin-top: 4px;">Adds stone-wall entities on perimeter platform tiles.</div>
                 </div>
             </div>
 

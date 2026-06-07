@@ -8,6 +8,7 @@ const scaleValue = document.getElementById('scaleValue');
 const rotationValue = document.getElementById('rotationValue');
 const tileTypeSelect = document.getElementById('tileTypeSelect');
 const customTileName = document.getElementById('customTileName');
+const addWallToggle = document.getElementById('addWallToggle');
 const exportBtn = document.getElementById('exportBtn');
 const copyBtn = document.getElementById('copyBtn');
 const gridPreview = document.getElementById('gridPreview');
@@ -18,6 +19,7 @@ const blueprintOutput = document.getElementById('blueprintOutput');
 const status = document.getElementById('status');
 
 let currentImageData = null;
+let currentImageName = '';
 
 uploadArea.addEventListener('click', () => imageInput.click());
 uploadArea.addEventListener('dragover', (e) => {
@@ -42,6 +44,8 @@ function handleImageUpload() {
     const file = imageInput.files[0];
     if (!file) return;
 
+    currentImageName = file.name;
+
     const reader = new FileReader();
     reader.onload = (e) => {
         const img = new Image();
@@ -63,25 +67,32 @@ function processImage(img) {
     ctx.drawImage(img, 0, 0);
     currentImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
+    syncControlLabels();
     showStatus('Image loaded! Adjust settings and preview.', 'info');
     updatePreview();
     exportBtn.disabled = false;
 }
 
 scaleSlider.addEventListener('input', () => {
-    scaleValue.textContent = scaleSlider.value + 'px';
+    syncControlLabels();
     updatePreview();
 });
 
 rotationSlider.addEventListener('input', () => {
-    const rotations = ['0°', '90°', '180°', '270°'];
-    rotationValue.textContent = rotations[rotationSlider.value];
+    syncControlLabels();
     updatePreview();
 });
 
 tileTypeSelect.addEventListener('change', () => {
     customTileName.hidden = tileTypeSelect.value !== 'custom';
 });
+
+function syncControlLabels() {
+    const rotations = ['0°', '90°', '180°', '270°'];
+
+    scaleValue.textContent = scaleSlider.value + 'px';
+    rotationValue.textContent = rotations[rotationSlider.value];
+}
 
 function updatePreview() {
     if (!currentImageData) return;
@@ -224,6 +235,51 @@ function getSelectedTileName() {
     return customTileName.value.trim();
 }
 
+function getBlueprintMetadata(scale) {
+    const fallbackName = 'Image to Platform';
+    const label = currentImageName
+        ? currentImageName.replace(/\.[^.]+$/, '')
+        : fallbackName;
+
+    return {
+        label,
+        description: `Source image: ${currentImageName || fallbackName}\nScale: ${scale}px per tile`
+    };
+}
+
+function getWallEntities(gridData) {
+    const neighborOffsets = [
+        { x: -1, y: -1 },
+        { x: 0, y: -1 },
+        { x: 1, y: -1 },
+        { x: -1, y: 0 },
+        { x: 1, y: 0 },
+        { x: -1, y: 1 },
+        { x: 0, y: 1 },
+        { x: 1, y: 1 }
+    ];
+    const occupiedTiles = new Set(
+        gridData.tiles.map((tile) => `${tile.x},${tile.y}`)
+    );
+    const perimeterTiles = gridData.tiles.filter((tile) => {
+        for (let index = 0; index < neighborOffsets.length; index++) {
+            const neighbor = neighborOffsets[index];
+            const neighborKey = `${tile.x + neighbor.x},${tile.y + neighbor.y}`;
+            if (!occupiedTiles.has(neighborKey)) {
+                return true;
+            }
+        }
+
+        return false;
+    });
+
+    return perimeterTiles.map((tile, index) => ({
+        entity_number: index + 1,
+        name: 'stone-wall',
+        position: { x: tile.x + 0.5, y: tile.y + 0.5 }
+    }));
+}
+
 exportBtn.addEventListener('click', () => {
     if (!currentImageData) return;
 
@@ -244,16 +300,20 @@ exportBtn.addEventListener('click', () => {
             showStatus('Error: Enter a custom tile name before exporting', 'error');
             return;
         }
+        const blueprintMetadata = getBlueprintMetadata(scale);
 
         const tiles = gridData.tiles.map((tile) => ({
             name: selectedTileName,
             position: { x: tile.x, y: tile.y }
         }));
+        const entities = addWallToggle.checked ? getWallEntities(gridData) : [];
 
         const blueprint = {
             blueprint: {
+                label: blueprintMetadata.label,
+                description: blueprintMetadata.description,
                 tiles,
-                entities: [],
+                entities,
                 schedules: []
             }
         };
