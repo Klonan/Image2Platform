@@ -233,46 +233,48 @@
 
                 <div class="panel p8">
                     <h3 class="mb8">Step 2: Configure Conversion</h3>
+                    <div class="panel-inset-lighter mb0">
 
-                    <div class="slider-group">
-                        <div class="slider-label">
-                            <span>Grid Scale</span>
-                            <span class="slider-value" id="scaleValue">4px</span>
-                        </div>
-                        <input type="range" id="scaleSlider" min="1" max="32" value="4" step="1">
-                        <div class="help-text">Smaller = more detail, larger = fewer tiles</div>
-                    </div>
+                      <div class="slider-group">
+                          <div class="slider-label">
+                              <span>Grid Scale</span>
+                              <span class="slider-value" id="scaleValue">4px</span>
+                          </div>
+                          <input type="range" id="scaleSlider" min="1" max="32" value="4" step="1">
+                          <div class="help-text">Smaller = more detail, larger = fewer tiles</div>
+                      </div>
 
-                    <div class="slider-group">
-                        <div class="slider-label">
-                            <span>Rotation</span>
-                            <span class="slider-value" id="rotationValue">0deg</span>
-                        </div>
-                        <input type="range" id="rotationSlider" min="0" max="3" value="0" step="1">
-                        <div class="help-text">0deg = up, 90deg = right, 180deg = down, 270deg = left</div>
-                    </div>
+                      <div class="slider-group">
+                          <div class="slider-label">
+                              <span>Rotation</span>
+                              <span class="slider-value" id="rotationValue">0deg</span>
+                          </div>
+                          <input type="range" id="rotationSlider" min="0" max="3" value="0" step="1">
+                          <div class="help-text">0deg = up, 90deg = right, 180deg = down, 270deg = left</div>
+                      </div>
 
-                    <div class="slider-group">
-                        <label class="field-label" for="tileTypeSelect">Tile Type</label>
-                        <select class="button" id="tileTypeSelect">
-                            <option value="space-platform-foundation">Space platform foundation</option>
-                            <option value="landfill">Landfill</option>
-                            <option value="stone-brick">Stone brick</option>
-                            <option value="concrete">Concrete</option>
-                            <option value="refined-concrete">Refined concrete</option>
-                            <option value="custom">Custom tile name</option>
-                        </select>
-                        <input type="text" id="customTileName" placeholder="Enter custom tile name" hidden>
-                        <div class="help-text">Custom names are passed through exactly for modded tiles.</div>
-                    </div>
+                      <div class="slider-group">
+                          <label class="field-label" for="tileTypeSelect">Tile Type</label>
+                          <select class="button" id="tileTypeSelect">
+                              <option value="space-platform-foundation">Space platform foundation</option>
+                              <option value="landfill">Landfill</option>
+                              <option value="stone-brick">Stone brick</option>
+                              <option value="concrete">Concrete</option>
+                              <option value="refined-concrete">Refined concrete</option>
+                              <option value="custom">Custom tile name</option>
+                          </select>
+                          <input type="text" id="customTileName" placeholder="Enter custom tile name" hidden>
+                          <div class="help-text">Custom names are passed through exactly for modded tiles.</div>
+                      </div>
 
-                    <div class="slider-group">
-                        <label class="checkbox-label" for="addWallToggle">
-                            <input type="checkbox" id="addWallToggle">
-                            <span class="checkbox"></span>
-                            <div>Add stone-wall perimeter</div>
-                        </label>
-                        <div class="help-text">Places stone-wall entities on outer edge platform tiles.</div>
+                      <div class="slider-group">
+                          <label class="checkbox-label" for="addWallToggle">
+                              <input type="checkbox" id="addWallToggle">
+                              <span class="checkbox"></span>
+                              <div>Add stone-wall perimeter</div>
+                          </label>
+                          <div class="help-text">Places stone-wall entities on outer edge platform tiles.</div>
+                      </div>
                     </div>
                 </div>
 
