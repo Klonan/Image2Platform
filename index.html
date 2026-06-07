@@ -3,7 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Convert transparent image silhouettes into Factorio tile blueprints.">
     <title>Image to Factorio Platform Converter</title>
+
+    <link rel="canonical" href="https://klonan.github.io/Image2Platform/">
+
+    <meta property="og:title" content="Image to Factorio Platform Converter">
+    <meta property="og:description" content="Convert transparent image silhouettes into Factorio tile blueprints.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://klonan.github.io/Image2Platform/">
+    <meta property="og:image" content="https://klonan.github.io/Image2Platform/preview.png">
+    <meta property="og:image:alt" content="Image2Platform converter UI showing image upload, settings, and blueprint output.">
+    <meta property="og:site_name" content="Image2Platform">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Image to Factorio Platform Converter">
+    <meta name="twitter:description" content="Convert transparent image silhouettes into Factorio tile blueprints.">
+    <meta name="twitter:image" content="https://klonan.github.io/Image2Platform/preview.png">
 
     <link href="https://cdn.factorio.com/assets/fonts/titillium-web.css" rel="stylesheet">
     <link href="https://cdn.factorio.com/assets/vendor/fontawesome/css/all.min.css" rel="stylesheet" crossorigin="anonymous">
@@ -241,7 +257,7 @@
                               <span class="slider-value" id="scaleValue">4px</span>
                           </div>
                           <input type="range" id="scaleSlider" min="1" max="32" value="4" step="1">
-                          <div class="help-text">Smaller = more detail, larger = fewer tiles</div>
+                          <div class="help-text">Smaller = more detail, Larger = fewer tiles</div>
                       </div>
 
                       <div class="slider-group">
@@ -250,7 +266,7 @@
                               <span class="slider-value" id="rotationValue">0deg</span>
                           </div>
                           <input type="range" id="rotationSlider" min="0" max="3" value="0" step="1">
-                          <div class="help-text">0deg = up, 90deg = right, 180deg = down, 270deg = left</div>
+                          <div class="help-text">0deg = Up, 90deg = Right, 180deg = Down, 270deg = Left</div>
                       </div>
 
                       <div class="slider-group">
@@ -264,14 +280,14 @@
                               <option value="custom">Custom tile name</option>
                           </select>
                           <input type="text" id="customTileName" placeholder="Enter custom tile name" hidden>
-                          <div class="help-text">Custom names are passed through exactly for modded tiles.</div>
+                          <div class="help-text">Custom names are passed through exactly (for modded tiles).</div>
                       </div>
 
                       <div class="slider-group">
                           <label class="checkbox-label" for="addWallToggle">
                               <input type="checkbox" id="addWallToggle">
                               <span class="checkbox"></span>
-                              <div>Add stone-wall perimeter</div>
+                              <div>Add Wall perimeter</div>
                           </label>
                           <div class="help-text">Places stone-wall entities on outer edge platform tiles.</div>
                       </div>
