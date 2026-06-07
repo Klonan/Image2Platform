@@ -6,6 +6,8 @@ const scaleSlider = document.getElementById('scaleSlider');
 const rotationSlider = document.getElementById('rotationSlider');
 const scaleValue = document.getElementById('scaleValue');
 const rotationValue = document.getElementById('rotationValue');
+const tileTypeSelect = document.getElementById('tileTypeSelect');
+const customTileName = document.getElementById('customTileName');
 const exportBtn = document.getElementById('exportBtn');
 const copyBtn = document.getElementById('copyBtn');
 const gridPreview = document.getElementById('gridPreview');
@@ -75,6 +77,10 @@ rotationSlider.addEventListener('input', () => {
     const rotations = ['0°', '90°', '180°', '270°'];
     rotationValue.textContent = rotations[rotationSlider.value];
     updatePreview();
+});
+
+tileTypeSelect.addEventListener('change', () => {
+    customTileName.hidden = tileTypeSelect.value !== 'custom';
 });
 
 function updatePreview() {
@@ -163,25 +169,59 @@ function generateGrid(imageData, pixelsPerTile, rotation) {
 }
 
 function renderPreview(gridData) {
-    const { width, height, grid } = gridData;
+    const { width, height, tiles } = gridData;
 
     if (width === 0 || height === 0) {
         gridPreview.innerHTML = '<div style="color: #666; text-align: center;">No content detected</div>';
         return;
     }
 
-    const tileSize = Math.max(1, Math.floor(200 / Math.max(width, height)));
+    const minPadding = 10;
+    const availableWidth = Math.max(1, gridPreview.clientWidth - minPadding * 2);
+    const cellSize = Math.max(2, Math.floor(availableWidth / width));
+    const gapSize = cellSize >= 6 ? 2 : 1;
+    const tileSize = Math.max(1, cellSize - gapSize);
+    const contentWidth = width * cellSize;
+    const contentHeight = height * cellSize;
+    const paddingX = Math.max(minPadding, Math.floor((gridPreview.clientWidth - contentWidth) / 2));
+    const paddingY = minPadding;
+    const canvas = document.createElement('canvas');
+    const canvasWidth = contentWidth + paddingX * 2;
+    const canvasHeight = contentHeight + paddingY * 2;
+    const ctx = canvas.getContext('2d');
 
-    let html = `<div class="grid" style="grid-template-columns: repeat(${width}, ${tileSize}px);">`;
-    for (let i = 0; i < grid.length; i++) {
-        if (grid[i]) {
-            html += `<div class="grid-tile" style="width: ${tileSize}px; height: ${tileSize}px;"></div>`;
-        } else {
-            html += `<div style="width: ${tileSize}px; height: ${tileSize}px;"></div>`;
-        }
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
+    canvas.style.display = 'block';
+    canvas.style.borderRadius = '4px';
+    canvas.style.width = `${canvasWidth}px`;
+    canvas.style.height = `${canvasHeight}px`;
+    canvas.style.imageRendering = 'pixelated';
+    ctx.imageSmoothingEnabled = false;
+
+    ctx.fillStyle = '#0a0a0a';
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+    ctx.fillStyle = '#667eea';
+    for (let i = 0; i < tiles.length; i++) {
+        const tile = tiles[i];
+        ctx.fillRect(
+            paddingX + tile.x * cellSize,
+            paddingY + tile.y * cellSize,
+            tileSize,
+            tileSize
+        );
     }
-    html += '</div>';
-    gridPreview.innerHTML = html;
+
+    gridPreview.replaceChildren(canvas);
+}
+
+function getSelectedTileName() {
+    if (tileTypeSelect.value !== 'custom') {
+        return tileTypeSelect.value;
+    }
+
+    return customTileName.value.trim();
 }
 
 exportBtn.addEventListener('click', () => {
@@ -199,8 +239,14 @@ exportBtn.addEventListener('click', () => {
             return;
         }
 
+        const selectedTileName = getSelectedTileName();
+        if (!selectedTileName) {
+            showStatus('Error: Enter a custom tile name before exporting', 'error');
+            return;
+        }
+
         const tiles = gridData.tiles.map((tile) => ({
-            name: 'space-platform-foundation',
+            name: selectedTileName,
             position: { x: tile.x, y: tile.y }
         }));
 
